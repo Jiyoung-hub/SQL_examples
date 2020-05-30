@@ -98,18 +98,25 @@ ORDER BY director, title;
        (Hint: This query is more difficult to write in SQLite than other systems; you might think of it as finding the highest 
        average rating and then choosing the movie(s) with that average rating.)
        
+SELECT title, MAX(avg)
+FROM (
+	SELECT m.title, AVG(r.stars) AS avg
+	FROM Rating AS r
+	LEFT JOIN Movie AS m
+	ON m.mID = r.mID
+	GROUP BY m.title
+	);
+      
+-- OR --
 SELECT m.title, AVG(ra.stars)
 FROM Rating AS ra
-    LEFT JOIN Movie AS m
-    ON ra.mID = m.mID
+LEFT JOIN Movie AS m
+ON ra.mID = m.mID
 GROUP BY m.title
 HAVING AVG(ra.stars) = (SELECT MAX(avg_stars)
-FROM(
-    SELECT AVG(ra.stars) AS avg_stars
-    FROM Rating AS ra
-    LEFT JOIN Movie AS m
-    ON ra.mID = m.mID
-    GROUP BY m.title));
+FROM(SELECT AVG(stars) AS avg_stars
+    FROM Rating
+    GROUP BY mID));
 
 --Q11.Find the movie(s) with the lowest average rating. Return the movie title(s) and average rating. 
       (Hint: This query may be more difficult to write in SQLite than other systems; you might think of it as finding the lowest 
