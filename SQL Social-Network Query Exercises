@@ -75,10 +75,9 @@ FROM Highschooler;
 
 --Q9. Find the name and grade of all students who are liked by more than one other student.
 
-SELECT h2.name, h2.grade
-FROM Highschooler AS h1, Highschooler AS h2, Likes AS l
-WHERE h1.ID = l.ID1
-AND h2.ID = l.ID2
-GROUP BY l.ID2
-HAVING COUNT(l.ID1) > 1;
+SELECT h.name, h.grade
+FROM Likes l, Highschooler h
+WHERE l.ID2 = h.ID
+GROUP BY l.ID2	
+HAVING COUNT(DISTINCT l.ID1) > 1;
 
